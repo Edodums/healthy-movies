@@ -1,6 +1,9 @@
 plugins {
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlinx-serialization'
 }
 
 android {
@@ -17,6 +20,11 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        // API KEY resolve
+        def properties = new Properties()
+        properties.load(new FileInputStream(project.rootProject.file("local.properties")))
+        buildConfigField "String", "API_KEY", "\"${properties.getProperty("API_KEY")}\""
     }
 
     buildTypes {
@@ -68,6 +76,15 @@ dependencies {
     // Ktor
     implementation "io.ktor:ktor-client-android:$ktor_version"
     implementation "io.ktor:ktor-client-serialization:$ktor_version"
-    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0'
+    implementation "io.ktor:ktor-serialization-kotlinx-json:$ktor_version"
+
     implementation "io.ktor:ktor-client-logging-jvm:$ktor_version"
+    implementation "io.ktor:ktor-client-content-negotiation:$ktor_version"
+    // Coil
+    implementation "io.coil-kt:coil:2.2.0"
+    implementation "io.coil-kt:coil-compose:2.2.0"
+    // Hilt
+    implementation "com.google.dagger:hilt-android:2.42"
+    kapt "com.google.dagger:hilt-compiler:2.42"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 }
